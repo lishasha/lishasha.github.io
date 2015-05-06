@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        *{ margin: 0; padding: 0; text-decoration: none;}
+        body { padding: 20px;}
+        #container { width: 600px; height: 400px; border: 3px solid #333;
+            overflow: hidden; position: relative;}
+        #list { width: 4000px; height: 400px; position: absolute; z-index: 1;}
+        #list img { float: left;  width: 600px;height: 400px;}
+        #buttons { position: absolute; height: 10px; width: 100px; z-index: 2; bottom: 20px; left: 250px;}
+        #buttons span { cursor: pointer; float: left; border: 1px solid #fff; width: 10px;
+            height: 10px; border-radius: 50%; background: #333; margin-right: 5px;}
+        #buttons .on {  background: orangered;}
+        .arrow { cursor: pointer; display: none; line-height: 39px;
+            text-align: center; font-size: 36px;
+            font-weight: bold;
+            width: 40px; height: 40px;  position: absolute;
+            z-index: 2; top: 180px;
+            background-color: RGBA(0,0,0,.3); color: #fff;}
+        .arrow:hover { background-color: RGBA(0,0,0,.7);}
+        #container:hover .arrow { display: block;}
+        #prev { left: 20px;}
+        #next { right: 20px;}
+    </style>
+</head>
+<body>
+<div id="container">
+    <div id="list" style="left: -600px;">
+        <img src="imge/5.jpg" alt="1"/>
+        <img src="imge/1.jpg" alt="1"/>
+        <img src="imge/2.jpg" alt="2"/>
+        <img src="imge/3.jpg" alt="3"/>
+        <img src="imge/4.jpg" alt="4"/>
+        <img src="imge/5.jpg" alt="5"/>
+        <img src="imge/1.jpg" alt="5"/>
+    </div>
+    <div id="buttons">
+        <span index="1" class="on"></span>
+        <span index="2"></span>
+        <span index="3"></span>
+        <span index="4"></span>
+        <span index="5"></span>
+    </div>
+    <a href="javascript:;" id="prev" class="arrow">&lt;</a>
+    <a href="javascript:;" id="next" class="arrow">&gt;</a>
+</div>
+<script type="text/javascript">
+    window.onload=function(){
+        var  container=document.getElementById("container");
+        var list=document.getElementById("list");
+        var buttons=document.getElementById("buttons").getElementsByTagName("span");
+        var prev=document.getElementById("prev");
+        var next=document.getElementById("next");
+        var index=1;
+//        next.onclick=function(){
+//           list.style.left=parseInt( list.style.left)-600 +"px";
+//        }
+//        prev.onclick=function(){
+//            list.style.left=parseInt(list.style.left)+600+"px";
+//        }
+        var animated=false;
+        var timer=0;
+        var time;
+        function animate(offset){
+            var newLeft=parseInt( list.style.left)+offset;
+            animated=true;
+            var time=300;//位移总时间
+            var intetval=10;//位移间隔时间
+            var speed=offset/(time/intetval);//每次位移量
+            function go(){
+                if((speed<0&&parseInt( list.style.left)>newLeft)||(speed>0&&parseInt( list.style.left)<newLeft)){
+                    list.style.left=parseInt( list.style.left)+speed+"px";
+                    setTimeout(go,intetval);
+                }else{
+
+                    list.style.left=newLeft+"px";
+                    if(newLeft>-600){
+                        list.style.left=-3000+"px";
+                    }
+                    if(list.style.left<-3000){
+                        list.style.left=-600+"px";
+                    }
+                    animated=false;
+                }
+            }
+            go();
+
+        }
+        function play(){
+            timer=setInterval(function(){
+               next.onclick();
+            },3000)
+        }
+        next.onclick=function(){
+            if(index==5){
+                index=1;
+            }else{
+                index+=1;
+            }
+
+            showButton();
+            if(!animated){
+                animate(600);
+            }
+
+        }
+        function play(){
+            time=setInterval(function(){
+            next.onclick()
+            },3000)
+        }
+        function stop(){
+            clearInterval(time);
+        }
+        prev.onclick=function(){
+            if(index==1){
+                index=5;
+            }else{
+                index-=1;
+            }
+
+            showButton();
+            if(!animated){
+                animate(600);
+            }
+
+        }
+
+        function showButton(){
+            for(var i=0;i<buttons.length;i++){
+                if(buttons[i].className=="on"){
+                    buttons[i].className="";
+                    break;
+                }
+            }
+            buttons[index-1].className="on";
+        }
+        container.onmouseover=stop;
+        container.onmouseout=play;
+    }
+</script>
+</body>
+</html>
